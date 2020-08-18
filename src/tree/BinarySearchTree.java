@@ -38,18 +38,6 @@ public class BinarySearchTree {
             }
             return left.min();
         }
-
-        /**
-         * Until right child is null, keep traversing left children
-         * 
-         * @return Node with max key
-         */
-        public Node max() {
-            if (right == null) {
-                return this;
-            }
-            return right.min();
-        }
     }
 
     private Node root;
@@ -60,6 +48,24 @@ public class BinarySearchTree {
             return node.value;
         }
         return null;
+    }
+
+    public void mirror() {
+        root = mirror(root);
+    }
+
+    private Node mirror(Node node) {
+        if (node == null) {
+            return node;
+        }
+
+        Node left = mirror(node.left);
+        Node right = mirror(node.right);
+
+        node.left = right;
+        node.right = left;
+
+        return node;
     }
 
     /**
@@ -144,7 +150,7 @@ public class BinarySearchTree {
             else {
                 // Find the min node of right child OR max node of left child
                 Node minRight = findMin(node.right);
-                // Node maxLeft = findMin(node.left);
+                // Node maxLeft = findMax(node.left);
 
                 // Replace the node with the found min/max node
                 node.key = minRight.key;
@@ -207,9 +213,34 @@ public class BinarySearchTree {
             System.out.print(node.key + " ");
         }
     }
-    
+
+    /**
+     * Get the height of tree. For each level, print the level order traversal
+     */
     public void printLevelOrderTraversal() {
-        // TODO
+        int h = height(root);
+        for (int i = 0; i < h; i++) {
+            levelOrderTraversal(root, i);
+        }
+    }
+
+    private int height(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + Math.max(height(node.left), height(node.right));
+    }
+
+    private void levelOrderTraversal(Node node, int level) {
+        if (node == null) {
+            return;
+        }
+        if (level == 0) {
+            System.out.print(node.key + " ");
+        } else {
+            levelOrderTraversal(node.left, level - 1);
+            levelOrderTraversal(node.right, level - 1);
+        }
     }
 
     public Node findMin(Node node) {
@@ -234,6 +265,12 @@ public class BinarySearchTree {
         bst.printInOrderTraversal();
         bst.printPreOrderTraversal();
         bst.printPostOrderTraversal();
+
+        bst.printLevelOrderTraversal();
+
+        bst.mirror();
+
+        bst.printLevelOrderTraversal();
     }
 
 }

@@ -1,8 +1,9 @@
 package sorting;
 
 /**
- * O(n^2)
- *
+ * O(n^2) Compare each element with its right neighbor.
+ * 
+ * By the end of 1st pass, largest element is settled in last place.
  */
 public class BubbleSort {
 
@@ -10,17 +11,21 @@ public class BubbleSort {
         for (int i = 0; i < numbers.length - 1; i++) {
             for (int j = 0; j < numbers.length - i - 1; j++) {
                 if (numbers[j] > numbers[j + 1]) {
-                    int temp = numbers[j];
-                    numbers[j] = numbers[j + 1];
-                    numbers[j + 1] = temp;
+                    swap(numbers, j, j + 1);
                 }
             }
         }
     }
 
+    private void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
     private void print(int[] numbers) {
         for (int i : numbers) {
-            System.out.print(i);
+            System.out.print(i + " ");
         }
         System.out.println();
     }

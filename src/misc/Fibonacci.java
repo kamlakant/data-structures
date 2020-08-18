@@ -18,7 +18,7 @@ public class Fibonacci {
     private long[] memo = new long[1000];
 
     /**
-     * f(n) is called only once for same number. That number is stored for future reference. O(n)
+     * Memoization - f(n) is called only once for same number. That number is stored for future reference. O(n)
      */
     private long memoizedFibonnaci(int number) {
         if (number <= 0) {

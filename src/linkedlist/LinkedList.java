@@ -1,5 +1,8 @@
 package linkedlist;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * GET/SET O(n)
  * 
@@ -19,9 +22,98 @@ public class LinkedList {
     }
 
     private Node head;
-    
+
     public void sort() {
-        // TODO
+        head = mergeSort(head);
+    }
+
+    /**
+     * Find middle node in list and divide into left and right lists. Repeat until left and right lists have single nodes.
+     * 
+     * Merge the already sorted left and right lists.
+     */
+    private Node mergeSort(Node node) {
+        // If head is null or list has 1 element
+        if (node == null || node.next == null) {
+            return node;
+        }
+
+        Node middle = findMiddleNode(node);
+
+        // Next node of middle is HEAD of right list
+        Node middleNext = middle.next;
+
+        // Break the list to create left list
+        middle.next = null;
+
+        Node left = mergeSort(node);
+        Node right = mergeSort(middleNext);
+
+        Node sorted = merge(left, right);
+        return sorted;
+
+    }
+
+    private Node findMiddleNode(Node node) {
+        if (node == null) {
+            return node;
+        }
+
+        // Slow moves by 1, Fast moves by 2
+        Node slow = node;
+        Node fast = node;
+
+        // When fast reaches end, slow reaches middle
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+
+    private Node merge(Node left, Node right) {
+        Node merged = null;
+
+        if (left == null) {
+            return right;
+        }
+
+        if (right == null) {
+            return left;
+        }
+
+        //
+        if (left.data < right.data) {
+            merged = left;
+            merged.next = merge(left.next, right);
+        } else {
+            merged = right;
+            merged.next = merge(left, right.next);
+        }
+
+        return merged;
+    }
+
+    /**
+     * Create a hash table of each node's data. If a node already exists in hash table, remove it from list
+     */
+    public void removeDuplicates() {
+        Set<Integer> uniqueNodes = new HashSet<>();
+
+        Node currentNode = head;
+        Node previousNode = null;
+
+        while (currentNode != null) {
+            if (uniqueNodes.add(currentNode.data)) {
+                // New node
+                previousNode = currentNode;
+            } else {
+                // Duplicate node. Bypass duplicate by pointing its previous's next pointer to its next node
+                previousNode.next = currentNode.next;
+            }
+            currentNode = currentNode.next;
+        }
     }
 
     public void addFront(int data) {
@@ -148,11 +240,14 @@ public class LinkedList {
 
     public void print() {
         Node current = head;
-        while (current.next != null) {
-            System.out.print(current.data + "\t");
+        while (current != null) {
+            System.out.print(current.data + " ");
+            if (current.next == null) {
+                break;
+            }
             current = current.next;
         }
-        System.out.println(current.data);
+        System.out.println();
     }
 
     public static void main(String[] args) {
@@ -173,5 +268,16 @@ public class LinkedList {
         System.out.println(list.getAtIndex(5));
         list.print();
         System.out.println("size=" + list.size());
+
+        list.addBack(30);
+        list.addFront(20);
+        list.insertAtIndex(3, 50);
+        list.print();
+
+        list.removeDuplicates();
+
+        list.sort();
+
+        list.print();
     }
 }
